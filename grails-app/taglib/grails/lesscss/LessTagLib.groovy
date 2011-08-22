@@ -56,7 +56,8 @@ class LessTagLib {
             fileType = '.css'
         }
 
-        link = generateRelativePath(dir, name, fileType, attrs.remove('plugin'), attrs.remove('contextPath'), attrs.remove('absolute'))
+        String contextPath = attrs.remove('contextPath') ?: '';
+        link = generateRelativePath(dir, name, fileType, attrs.remove('plugin'), contextPath, attrs.remove('absolute'))
 
         def mkp = new MarkupBuilder(out)
         def params = [rel: rel, type: 'text/css', href: link]
@@ -67,7 +68,7 @@ class LessTagLib {
     def scripts = { attrs, body ->
 
         if (isUsingAutoCompile()) {
-            String src = generateRelativePath('js', Constants.LESS_SCRIPT_NAME, '.js', "lesscss", false)
+            String src = generateRelativePath('js', Constants.LESS_SCRIPT_NAME, '.js', "lesscss", "", false)
 
             out << "<script type=\"text/javascript\" src=\"${src}\"></script>"
 
@@ -114,7 +115,7 @@ class LessTagLib {
         }
 
         StringBuilder path = new StringBuilder()
-        path << g.resource(plugin:plugin ?: null, contextPath: contextPath) ?: '', dir: dir, file: name)
+        path << g.resource(plugin:plugin ?: null, contextPath: contextPath, dir: dir, file: name)
         if (extension) {
             path << extension
         }
